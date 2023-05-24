@@ -30,17 +30,17 @@ app.set("port", process.env.PORT);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require("morgan")("dev"));
-app.use(
-  require("cors")({
-    origin: "*",
-  })
-);
 // app.use(
 //   require("cors")({
-//     origin: "http://localhost:3000",
-//     credentials: true,
+//     origin: "*",
 //   })
 // );
+app.use(
+  require("cors")({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.static("./src/storage"));
 
 app.use("/", router);
