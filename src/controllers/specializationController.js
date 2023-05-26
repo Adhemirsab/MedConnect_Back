@@ -66,25 +66,16 @@ const createSpecializations = async (req, res) => {
 const deleteSpecializations = async (req, res) => {
   try {
     const { id } = req.params;
-    const dataFile = await Specialization.findByPk(id);
-    // console.log(dataFile);
-    if (!dataFile) {
-      handleHttpError(res, `Specialization with ID ${id} not found`, 404);
-    }
-    await dataFile.destroy();
+    const deletedSpec = await Specialization.findByPk(id);
 
-    const { url } = dataFile;
-    const filename = url.split("/").pop();
-    console.log(url);
-    const filePath = `${MEDIA_PATH}/${filename}`;
-    fs.unlinkSync(filePath);
-    const data = {
-      filePath,
-      deleted: 1,
-    };
-    res.send({ data });
+    if (!deletedSpec) {
+      return handleHttpError(res, `Especialidad con id ${id} no encontrada`);
+    }
+    await deletedSpec.destroy();
+
+    res.status(200).json({ message: "Especialidad eliminada" });
   } catch (error) {
-    handleHttpError(res, { error: error.message }, 500);
+    handleHttpError(res, { error: error.message }, 404);
   }
 };
 
