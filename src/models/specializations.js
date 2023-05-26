@@ -15,9 +15,17 @@ module.exports = (sequelize) => {
       description: {
         type: DataTypes.TEXT,
       },
+      deletedAt: {
+        // Columna para el borrado lógico
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
-      timestamps: false,
+      paranoid: true, // Habilitar borrado lógico
+    },
+    {
+      timestamps: true,
     }
   );
 };

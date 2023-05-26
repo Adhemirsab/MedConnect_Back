@@ -76,6 +76,33 @@ const deleteSpecializations = async (req, res) => {
     res.status(200).json({ message: "Especialidad eliminada" });
   } catch (error) {
     handleHttpError(res, { error: error.message }, 404);
+<<<<<<< HEAD
+=======
+  }
+};
+
+const restoreSpec = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Specialization.findByPk(id, { paranoid: false });
+
+    if (!deleted) {
+      return handleHttpError(res, `Especilidad con id ${id} no encontrada`);
+    }
+    // Verificar si el usuario está marcado como eliminado
+    if (deleted.deletedAt === null) {
+      return handleHttpError(
+        res,
+        `La especialidad con id ${id} no ha sido eliminado`
+      );
+    }
+    //Restaurar el usuario
+    await deleted.restore();
+
+    res.status(200).json({ message: "Especialidad restaurada" });
+  } catch (error) {
+    handleHttpError(res, { error: error.message }, 404);
+>>>>>>> 6fc4543f837f022b2544e80d5b2d355129199c57
   }
 };
 
@@ -108,4 +135,5 @@ module.exports = {
   deleteSpecializations,
   getSpecialization,
   updateSpecialization,
+  restoreSpec,
 };

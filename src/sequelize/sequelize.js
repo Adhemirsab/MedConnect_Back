@@ -44,6 +44,27 @@ sequelize.models = Object.fromEntries(capsEntries);
 // Para relacionarlos hacemos un destructuring
 
 // console.log(sequelize.models);
+const createAppointment = async (req, res) => {
+  try {
+    const { body } = req;
+
+    const newAppointment = await Appointment.create({
+      scheduledDate: body.scheduledDate,
+      scheduledTime: body.scheduledTime,
+      status: body.status,
+      userId: body.userId,
+      patientId: body.patientId,
+    });
+
+    if (newAppointment) {
+      res.status(200).json({ message: "¡Cita creada exitosamente!" });
+    } else {
+      handleHttpError(res, "Error al crear la cita", 404);
+    }
+  } catch (error) {
+    handleHttpError(res, { error: error.message }, 500);
+  }
+};
 const {
   Specialization,
   Medico,
@@ -101,6 +122,6 @@ PatientsReview.belongsTo(User);
 //*DEFINIENDO RELACIONES ADMINISTRATOR
 Administrator.belongsTo(City);
 module.exports = {
-  ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
+  ...sequelize.models, // para \poder importar los modelos así: const { Product, User } = require('./db.js');
   conn: sequelize, // para importart la conexión { conn } = require('./db.js');
 };
